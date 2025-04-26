@@ -10,14 +10,14 @@ Person(connectionEngineer, "Специалист", "Специалист по п
 
 System(warmhouseSystem, "Система 'Тёплый дом'", "Система позволяет управлять системой отопления и снимать показания с датчиков")
 
-System_Ext(heatingSystem1, "Система1", "Система отопления")
-System_Ext(heatingSystem2, "Система2", "Система отопления")
-System_Ext(heatingSystemN, "СистемаN", "Система отопления")
+System_Ext(heatingSystem1, "Система1", "Система отопления", "Использует REST, данные в формате JSON")
+System_Ext(heatingSystem2, "Система2", "Система отопления", "Использует REST, данные в формате JSON")
+System_Ext(heatingSystemN, "СистемаN", "Система отопления", "Использует REST, данные в формате JSON")
 
 Rel(user, warmhouseSystem, "Использует систему")
 Rel(connectionEngineer, warmhouseSystem, "Подключает системы отопления к системе, регистрирует датчики в системе, выполняет настройку соединения")
-Rel(warmhouseSystem, heatingSystem1, "Передаёт команды, запрашивает показания")
-Rel(warmhouseSystem, heatingSystem2, "Передаёт команды, запрашивает показания")
-Rel(warmhouseSystem, heatingSystemN, "Передаёт команды, запрашивает показания")
+Rel(warmhouseSystem, heatingSystem1, "Передаёт команды, запрашивает показания.")
+Rel(warmhouseSystem, heatingSystem2, "Передаёт команды, запрашивает показания.")
+Rel(warmhouseSystem, heatingSystemN, "Передаёт команды, запрашивает показания.")
 
 @enduml
