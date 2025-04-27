@@ -1,0 +1,46 @@
+@startuml
+
+title Диаграмма компонентов системы "Тёплый дом"
+
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/refs/heads/master/C4_Component.puml
+
+Container_Boundary(warmhouseSystem, "Система 'Тёплый дом'") {
+    Container(webapp, "Веб-приложение", "Go, React", "Отвечает за взаимодействие с пользователем")
+    Container(telemetryService, "Сервис телеметрии", "Go", "Собирает телеметрию с устройств")
+    Container(heatingSystemService, "Сервис взаимодействия с системой отопления", "Go", "Отправляет команды пользователя системе отопления")
+    Container(lightSystemService, "Сервис взаимодействия с системой освещения", "Go", "Отправляет команды пользователя системе освещения")
+    Container(gateSystemService, "Сервис взаимодействия с системой автоматических ворот", "Go", "Отправляет команды пользователя")
+    Container(videoSystemService, "Сервис взаимодействия с системой видеонаблюдения", "Go", "Отправляет команды пользователя, принимает видеопоток с камер")
+    Container(messageBroker, "Брокер сообщений", "Apache Kafka", "Получает данные телеметрии с устройств")
+    Container(db, "База данных", "PostgreSQL", "Содержит данные о пользователях, их устройствах, телеметрию с устройств")
+}
+
+Container(webapp, "Веб-приложение", "Go, React", "Отвечает за взаимодействие с пользователем") {
+    Component(authController, "AuthController", "Отвечает за авторизацию пользователей и за разграничение прав доступа к внешним системам")
+    Component(deviceManagementController, "DeviceManagementController", "Отвечает за добавление устройств в систему, их удаление и редактирование")
+    Component(deviceCommandController, "DeviceCommandController", "Отвечает за отправку команд устройствам")
+    Component(dashboardController, "DashboardController", "Отвечает за отображение телеметрии устройств")
+    Component(videoStreamController, "VideoStreamController", "Отвечает за отображение видеопотока с устройств")
+    Component(appServiceLayer, "Сервисный слой", "Бизнес-логика")
+    Component(appRepositoryLayer, "Слой репозиториев", "Доступ к базе данных")
+}
+
+Container(telemetryService, "Сервис телеметрии", "Go", "Собирает телеметрию с устройств") {
+    Component(telemetryConsumer, "TelemetryConsumer", "Получает телеметрию от брокера сообщений")
+    Component(telemetryServiceLayer, "Сервисный слой", "Бизнес-логика")
+    Component(telemetryRepositoryLayer, "Слой репозиториев", "Доступ к базе данных")
+}
+
+Rel(authController, appServiceLayer, "Обращается к бизнес-логике")
+Rel(deviceManagementController, appServiceLayer, "Обращается к бизнес-логике")
+Rel(deviceCommandController, appServiceLayer, "Обращается к бизнес-логике")
+Rel(dashboardController, appServiceLayer, "Обращается к бизнес-логике")
+Rel(videoStreamController, appServiceLayer, "Обращается к бизнес-логике")
+Rel(appServiceLayer, appRepositoryLayer, "Сохраняет и читает данные")
+Rel(appRepositoryLayer, db, "Сохраняет и читает данные")
+Rel(telemetryConsumer, telemetryServiceLayer, "Обращается к бизнес-логике")
+Rel(telemetryServiceLayer, telemetryRepositoryLayer, "Сохраняет и читает данные")
+Rel(telemetryRepositoryLayer, db, "Сохраняет и читает данные")
+
+
+@enduml
