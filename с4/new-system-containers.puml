@@ -2,12 +2,12 @@
 
 title Диаграмма контейнеров новой системы "Тёплый дом"
 
-' top to bottom direction
+left to right direction
 
 !includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
 
 Person(user, "Пользователь", "Пользователь системы 'Тёплый дом'")
-System(warmhouseSystem, "Система 'Тёплый дом'", "Система позволяет управлять системой отопления и снимать показания с датчиков")
+System(warmhouseSystem, "Система 'Тёплый дом'", "Система позволяет управлять системами умного дома")
 
 Container_Boundary(warmhouseSystem, "Система 'Тёплый дом'") {
     Container(webapp, "Веб-приложение", "Go, React", "Отвечает за взаимодействие с пользователем")
