@@ -2,7 +2,7 @@
 
 title Диаграмма контейнеров новой системы "Тёплый дом"
 
-' left to right direction
+skinparam linetype ortho
 
 !includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/refs/heads/master/C4_Container.puml
 

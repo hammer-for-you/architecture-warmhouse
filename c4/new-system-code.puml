@@ -2,6 +2,8 @@
 
 title Диаграмма кода системы 'Тёплый дом'
 
+skinparam linetype ortho
+
 !includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/refs/heads/master/C4_Component.puml
 
 class User {
