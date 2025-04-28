@@ -32,6 +32,7 @@ abstract class Device {
     +String type
     +DeviceConfiguration configuration
     +String name
+    +String serialNumber
     +String location
     +DeviceStatus status
     +List<Sensor> sensors
@@ -94,6 +95,7 @@ class Sensor {
     +String id
     +String deviceId
     +String name
+    +String serialNumber
     +Double value
     +String unit
 }
