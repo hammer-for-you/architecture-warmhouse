@@ -1,0 +1,115 @@
+@startuml
+
+title Диаграмма кода системы 'Тёплый дом'
+
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/refs/heads/master/C4_Component.puml
+
+class User {
+    +String id
+    +String name
+    +String email
+    +List<House> houses
+    +String register(String login)
+    +void login()
+    +void delete()
+    +void addHouse(House house)
+    +void removeHouse(House house)
+}
+
+class House {
+    +String id
+    +String userId
+    +String name
+    +String address,
+    +List<Device> devices
+    +void addDevice(Device device)
+    +void removeDevice(Device device)
+}
+
+abstract class Device {
+    +String id
+    +String houseId
+    +String type
+    +DeviceConfiguration configuration
+    +String name
+    +String location
+    +DeviceStatus status
+    +List<Sensor> sensors
+    +configure(DeviceConfiguration configuration)
+    +{abstract} void execute(DeviceCommand command)
+    +void setStatus(DeviceStatus status)
+    +void addSensor(Sensor sensor)
+    +void removeSensor(Sensor sensor)
+    +Sensor getSensor(String sensorId)
+}
+
+class HeatingDevice {
+    +void execute(HeatingDeviceCommand command)
+}
+
+class LightDevice {
+    +void execute(LightDeviceCommand command)
+}
+
+class GateDevice {
+    +void execute(GateDeviceCommand command)
+}
+
+class DeviceConfiguration {
+    +String url
+    +Integer port
+}
+
+class VideoDevice {
+    +void execute(VideoDeviceCommand command)
+}
+
+class DeviceStatus {
+    +String id
+    +String name
+}
+
+interface DeviceCommand {
+    +String getDeviceId()
+}
+
+class HeatingDeviceCommand {
+    +DeviceStatus status
+    +Double value
+}
+
+class LightDeviceCommand {
+    +DeviceStatus status
+}
+
+class GateDeviceCommand {
+    +DeviceStatus status
+}
+
+class VideoDeviceCommand {
+    +DeviceStatus status
+}
+
+class Sensor {
+    +String id
+    +String deviceId
+    +String name
+    +Double value
+    +String unit
+}
+
+User "1" -- "0..*" House: has
+House "1" -- "0..*" Device: has
+Device "1" -- "0..*" Sensor: has
+Device "1" -- "1" DeviceStatus: has
+Device "1" -- "1" DeviceConfiguration: has
+HeatingDevice --|> Device
+LightDevice --|> Device
+GateDevice --|> Device
+VideoDevice --|> Device
+HeatingDeviceCommand --|> DeviceCommand
+LightDeviceCommand --|> DeviceCommand
+GateDeviceCommand --|> DeviceCommand
+VideoDeviceCommand --|> DeviceCommand
+Device ..> DeviceCommand: uses
+@enduml
