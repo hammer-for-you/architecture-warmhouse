@@ -103,13 +103,13 @@ House "1" -- "0..*" Device: has
 Device "1" -- "0..*" Sensor: has
 Device "1" -- "1" DeviceStatus: has
 Device "1" -- "1" DeviceConfiguration: has
-HeatingDevice --|> Device
-LightDevice --|> Device
-GateDevice --|> Device
-VideoDevice --|> Device
-HeatingDeviceCommand --|> DeviceCommand
-LightDeviceCommand --|> DeviceCommand
-GateDeviceCommand --|> DeviceCommand
-VideoDeviceCommand --|> DeviceCommand
+HeatingDevice --|> Device: extends
+LightDevice --|> Device: extends
+GateDevice --|> Device: extends
+VideoDevice --|> Device: extends
+HeatingDeviceCommand --|> DeviceCommand: implements
+LightDeviceCommand --|> DeviceCommand: implements
+GateDeviceCommand --|> DeviceCommand: implements
+VideoDeviceCommand --|> DeviceCommand: implements
 Device ..> DeviceCommand: uses
 @enduml
