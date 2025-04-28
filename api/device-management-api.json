@@ -1,0 +1,581 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "API для управления устройствами",
+    "version": "0.0.1"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Sensor Management",
+      "description": "Операции с датчиками устройства"
+    },
+    {
+      "name": "Device Management",
+      "description": "Методы для работы с устройством"
+    }
+  ],
+  "paths": {
+    "/api/v1/device": {
+      "put": {
+        "tags": [
+          "Device Management"
+        ],
+        "summary": "Создать устройство",
+        "operationId": "createDevice",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "ОК",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Device"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Неверные данные запроса",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/device/{deviceId}/sensor": {
+      "put": {
+        "tags": [
+          "Sensor Management"
+        ],
+        "summary": "Добавить датчик устройства",
+        "operationId": "addSensor",
+        "parameters": [
+          {
+            "name": "deviceId",
+            "in": "path",
+            "description": "Идентификатор устройства",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SensorUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "ОК",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Device"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Устройство не найдено",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorInfo"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Неверные параметры запроса",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/device/{id}": {
+      "get": {
+        "tags": [
+          "Device Management"
+        ],
+        "summary": "Получить устройство по идентификатору",
+        "operationId": "getDeviceById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Идентификатор устройства",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ОК",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Device"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Устройство не найдено",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorInfo"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Device Management"
+        ],
+        "summary": "Удалить устройство",
+        "operationId": "deleteDevice",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Идентификатор устройства",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ОК"
+          },
+          "404": {
+            "description": "Устройство не найдено"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Device Management"
+        ],
+        "summary": "Отредактировать данные устройства",
+        "operationId": "updateDevice",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Идентификатор устройства",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "ОК",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Device"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Устройство не найдено",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorInfo"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Неверные данные запроса",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/device/{deviceId}/sensor/{sensorId}": {
+      "delete": {
+        "tags": [
+          "Sensor Management"
+        ],
+        "summary": "Удалить датчик устройства",
+        "operationId": "removeSensor",
+        "parameters": [
+          {
+            "name": "deviceId",
+            "in": "path",
+            "description": "Идентификатор устройства",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sensorId",
+            "in": "path",
+            "description": "Идентификатор сенсора",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ОК",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Device"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Устройство или сенсор не найдены",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorInfo"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Неверные параметры запроса",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "DeviceConfiguration": {
+        "required": [
+          "port",
+          "url"
+        ],
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "URL устройства"
+          },
+          "port": {
+            "type": "integer",
+            "description": "Порт устройства",
+            "format": "int32"
+          }
+        },
+        "description": "Конфигурация устройства",
+        "example": {
+          "url": "http://localhost",
+          "port": 9090
+        }
+      },
+      "DeviceCreateRequest": {
+        "required": [
+          "configuration",
+          "serialNumber",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Тип устройства"
+          },
+          "configuration": {
+            "$ref": "#/components/schemas/DeviceConfiguration"
+          },
+          "name": {
+            "type": "string",
+            "description": "Название устройства"
+          },
+          "serialNumber": {
+            "type": "string",
+            "description": "Серийный номер устройства"
+          },
+          "location": {
+            "type": "string",
+            "description": "Расположение устройства внутри дома (например, 'Гостиная' или 'Кухня')"
+          }
+        },
+        "description": "Данные для создания устройства",
+        "example": {
+          "type": "Система освещения",
+          "configuration": {
+            "url": "https://localhost",
+            "port": 9090
+          },
+          "name": "Система освещения",
+          "serialNumber": "111-222-333-LGT",
+          "location": "Гостиная"
+        }
+      },
+      "Device": {
+        "required": [
+          "configuration",
+          "id",
+          "sensors",
+          "serialNumber",
+          "status",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Идентификатор устройства"
+          },
+          "type": {
+            "type": "string",
+            "description": "Тип устройства"
+          },
+          "configuration": {
+            "$ref": "#/components/schemas/DeviceConfiguration"
+          },
+          "name": {
+            "type": "string",
+            "description": "Название устройства"
+          },
+          "serialNumber": {
+            "type": "string",
+            "description": "Серийный номер устройства"
+          },
+          "location": {
+            "type": "string",
+            "description": "Расположение устройства внутри дома (например, 'Гостиная' или 'Кухня')"
+          },
+          "status": {
+            "type": "string",
+            "description": "Статус устройства"
+          },
+          "sensors": {
+            "type": "array",
+            "description": "Датчики устройства",
+            "items": {
+              "$ref": "#/components/schemas/Sensor"
+            }
+          }
+        },
+        "description": "Устройство, подключённое к системе 'Тёплый дом'",
+        "example": {
+          "id": "7983edfc-bdde-4727-b27a-50314b4542d2",
+          "type": "Система освещения",
+          "configuration": {
+            "url": "https://localhost",
+            "port": 9090
+          },
+          "name": "Система освещения",
+          "serialNumber": "111-222-333-LGT",
+          "location": "Гостиная",
+          "status": "Включён",
+          "sensors": [
+            {
+              "id": "a1babc98-2d0a-48db-bc55-9a3123c14fa5",
+              "name": "string",
+              "serialNumber": "string"
+            }
+          ]
+        }
+      },
+      "Sensor": {
+        "required": [
+          "id",
+          "serialNumber"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Идентификатор датчика"
+          },
+          "name": {
+            "type": "string",
+            "description": "Название датчика"
+          },
+          "serialNumber": {
+            "type": "string",
+            "description": "Серийный номер"
+          }
+        },
+        "description": "Датчик устройства",
+        "example": {
+          "id": "27b6c6a5-bb73-48d7-8029-5fd997663b32",
+          "name": "Датчик 1",
+          "serialNumber": "123456789"
+        }
+      },
+      "SensorUpdateRequest": {
+        "required": [
+          "serialNumber"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Название датчика"
+          },
+          "serialNumber": {
+            "type": "string",
+            "description": "Серийный номер"
+          }
+        },
+        "description": "Данные для добавления датчика",
+        "example": {
+          "name": "Датчик 1",
+          "serialNumber": "987654321"
+        }
+      },
+      "DeviceUpdateRequest": {
+        "required": [
+          "configuration",
+          "serialNumber"
+        ],
+        "type": "object",
+        "properties": {
+          "configuration": {
+            "$ref": "#/components/schemas/DeviceConfiguration"
+          },
+          "name": {
+            "type": "string",
+            "description": "Название устройства"
+          },
+          "serialNumber": {
+            "type": "string",
+            "description": "Серийный номер устройства"
+          },
+          "location": {
+            "type": "string",
+            "description": "Расположение устройства внутри дома (например, 'Гостиная' или 'Кухня')"
+          }
+        },
+        "description": "Данные для редактирования устройства",
+        "example": {
+          "name": "Новое имя устройства",
+          "serialNumber": "333-222-111",
+          "location": "Кухня"
+        }
+      },
+      "ErrorInfo": {
+        "required": [
+          "httpStatusCode",
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "httpStatusCode": {
+            "type": "integer",
+            "description": "Код HTTP статуса",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string",
+            "description": "Сообщение об ошибке"
+          },
+          "details": {
+            "type": "string",
+            "description": "Дополнительная информация об ошибке"
+          }
+        },
+        "description": "Информация об ошибке",
+        "example": {
+          "httpStatusCode": "404",
+          "message": "Устройство не найдено",
+          "details": "Устройство с идентификатором 7983edfc-bdde-4727-b27a-50314b4542d2 не найдено"
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "ОК"
+      },
+      "404": {
+        "description": "Объект не найден",
+        "content": {
+          "*/*": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorInfo"
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Ошибка в данных запроса",
+        "content": {
+          "*/*": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorInfo"
+            }
+          }
+        }
+      }
+    }
+  }
+}

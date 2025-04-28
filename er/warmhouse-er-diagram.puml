@@ -20,7 +20,7 @@ entity Device {
     * house_id: string
     * type_id: string
     name: string
-    serial_number: string
+    *serial_number: string
     location: string
     * status_id
 }
