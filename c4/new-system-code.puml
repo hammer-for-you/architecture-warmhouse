@@ -98,8 +98,7 @@ class Sensor {
     +String deviceId
     +String name
     +String serialNumber
-    +Double value
-    +String unit
+    +String location
 }
 
 User "1" -- "0..*" House: has

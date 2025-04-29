@@ -47,6 +47,7 @@ entity Sensor {
     * device_id: string
     name: string
     * serial_number: string
+    location: string
 }
 
 entity TelemetryData {

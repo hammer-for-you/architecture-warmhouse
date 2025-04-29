@@ -463,13 +463,18 @@
           "serialNumber": {
             "type": "string",
             "description": "Серийный номер"
+          },
+          "location": {
+            "type": "string",
+            "description": "Расположение датчика внутри дома (например, 'Гостиная' или 'Кухня')"
           }
         },
         "description": "Датчик устройства",
         "example": {
           "id": "27b6c6a5-bb73-48d7-8029-5fd997663b32",
           "name": "Датчик 1",
-          "serialNumber": "123456789"
+          "serialNumber": "123456789",
+          "location": "Гараж"
         }
       },
       "SensorUpdateRequest": {
@@ -485,12 +490,17 @@
           "serialNumber": {
             "type": "string",
             "description": "Серийный номер"
+          },
+          "location": {
+            "type": "string",
+            "description": "Расположение датчика внутри дома (например, 'Гостиная' или 'Кухня')"
           }
         },
         "description": "Данные для добавления датчика",
         "example": {
           "name": "Датчик 1",
-          "serialNumber": "987654321"
+          "serialNumber": "987654321",
+          "location": "Спальня"
         }
       },
       "DeviceUpdateRequest": {
