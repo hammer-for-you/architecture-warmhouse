@@ -44,7 +44,7 @@ Rel(messageBroker, gateSystem, "Передаёт команды")
 Rel(messageBroker, videoSystem, "Передаёт команды")
 Rel(webapp, heatingSystemService, "Транслирует команды пользователя системе отопления")
 Rel(webapp, lightSystemService, "Транслирует команды пользователя системе освещения")
-Rel(webapp, gateSystem, "Транслирует команды пользователя системе автоматических ворот")
+Rel(webapp, gateSystemService, "Транслирует команды пользователя системе автоматических ворот")
 Rel(webapp, videoSystemService, "Транслирует команды пользователя системе видеонаблюдения, запрашивает видеопоток с камер")
 
 @enduml
