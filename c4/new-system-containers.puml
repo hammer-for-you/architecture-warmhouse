@@ -1,0 +1,50 @@
+@startuml
+
+title Диаграмма контейнеров новой системы "Тёплый дом"
+
+skinparam linetype ortho
+
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/refs/heads/master/C4_Container.puml
+
+Person(user, "Пользователь", "Пользователь системы 'Тёплый дом'")
+System(warmhouseSystem, "Система 'Тёплый дом'")
+
+Container_Boundary(warmhouseSystem, "Система 'Тёплый дом'") {
+    Container(webapp, "Веб-приложение", "Go, React", "Отвечает за взаимодействие с пользователем")
+    Container(telemetryService, "Сервис телеметрии", "Go", "Собирает телеметрию с устройств")
+    Container(heatingSystemService, "Сервис взаимодействия с системой отопления", "Go", "Отправляет команды пользователя системе отопления")
+    Container(lightSystemService, "Сервис взаимодействия с системой освещения", "Go", "Отправляет команды пользователя системе освещения")
+    Container(gateSystemService, "Сервис взаимодействия с системой автоматических ворот", "Go", "Отправляет команды пользователя")
+    Container(videoSystemService, "Сервис взаимодействия с системой видеонаблюдения", "Go", "Отправляет команды пользователя, принимает видеопоток с камер")
+    Container(messageBroker, "Брокер сообщений", "Apache Kafka", "Получает данные телеметрии с устройств")
+    Container(db, "База данных", "PostgreSQL", "Содержит данные о пользователях, их устройствах, телеметрию с устройств")
+}
+
+System_Ext(heatingSystem, "Система1", "Система отопления")
+System_Ext(lightSystem, "Система2", "Система освещения")
+System_Ext(gateSystem, "Система3", "Система автоматических ворот")
+System_Ext(videoSystem, "Система4", "Система видеонаблюдения")
+
+Rel(user, webapp, "Использует систему")
+Rel(webapp, db, "Чтение и запись данных о пользователях и их устройствах, чтение телеметрии с устройств")
+Rel(telemetryService, db, "Сохраняет данные телеметрии")
+Rel(messageBroker, telemetryService, "Отдаёт данные телеметрии")
+Rel(heatingSystem, messageBroker, "Отправляет данные телеметрии")
+Rel(lightSystem, messageBroker, "Отправляет данные телеметрии")
+Rel(gateSystem, messageBroker, "Отправляет данные телеметрии")
+Rel(videoSystem, messageBroker, "Отправляет данные телеметрии")
+Rel(heatingSystemService, messageBroker, "Отправляет команды")
+Rel(lightSystemService, messageBroker, "Отправляет команды")
+Rel(gateSystemService, messageBroker, "Отправляет команды")
+Rel(videoSystemService, messageBroker, "Отправляет команды")
+Rel(videoSystemService, videoSystem, "Запрашивает видеопоток")
+Rel(messageBroker, heatingSystem, "Передаёт команды")
+Rel(messageBroker, lightSystem, "Передаёт команды")
+Rel(messageBroker, gateSystem, "Передаёт команды")
+Rel(messageBroker, videoSystem, "Передаёт команды")
+Rel(webapp, heatingSystemService, "Транслирует команды пользователя системе отопления")
+Rel(webapp, lightSystemService, "Транслирует команды пользователя системе освещения")
+Rel(webapp, gateSystem, "Транслирует команды пользователя системе автоматических ворот")
+Rel(webapp, videoSystemService, "Транслирует команды пользователя системе видеонаблюдения, запрашивает видеопоток с камер")
+
+@enduml

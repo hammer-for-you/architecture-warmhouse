@@ -1,0 +1,110 @@
+@startuml
+
+title Диаграмма компонентов системы "Тёплый дом"
+
+skinparam linetype ortho
+
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/refs/heads/master/C4_Component.puml
+
+' Границы контейнера
+Container_Boundary(warmhouseSystem, "Система 'Тёплый дом'") {
+    Container(webapp, "Веб-приложение", "Go, React", "Отвечает за взаимодействие с пользователем")
+    Container(telemetryService, "Сервис телеметрии", "Go", "Собирает телеметрию с устройств")
+    Container(heatingSystemService, "Сервис взаимодействия с системой отопления", "Go", "Отправляет команды пользователя системе отопления")
+    Container(lightSystemService, "Сервис взаимодействия с системой освещения", "Go", "Отправляет команды пользователя системе освещения")
+    Container(gateSystemService, "Сервис взаимодействия с системой автоматических ворот", "Go", "Отправляет команды пользователя")
+    Container(videoSystemService, "Сервис взаимодействия с системой видеонаблюдения", "Go", "Отправляет команды пользователя, принимает видеопоток с камер")
+    Container(messageBroker, "Брокер сообщений", "Apache Kafka", "Получает данные телеметрии с устройств")
+    Container(db, "База данных", "PostgreSQL", "Содержит данные о пользователях, их устройствах, телеметрию с устройств")
+}
+
+' Веб-приложение
+Container(webapp, "Веб-приложение", "Go, React", "Отвечает за взаимодействие с пользователем") {
+    Component(authController, "AuthController", "Отвечает за авторизацию пользователей и за разграничение прав доступа к внешним системам")
+    Component(deviceManagementController, "DeviceManagementController", "Отвечает за добавление устройств в систему, их удаление и редактирование")
+    Component(deviceCommandController, "DeviceCommandController", "Отвечает за отправку команд устройствам")
+    Component(dashboardController, "DashboardController", "Отвечает за отображение телеметрии устройств")
+    Component(appVideoStreamController, "VideoStreamController", "Отвечает за отображение видеопотока с устройств")
+    Component(appVideoStreamClient, "VideoStreamClient", "Получает видеопоток из системы видеонаблюдения")
+    Component(deviceCommandClientRegistry, "CommandClientRegistry", "Отправляет команды устройствам")
+    Component(appServiceLayer, "Сервисный слой", "Бизнес-логика")
+    Component(appRepositoryLayer, "Слой репозиториев", "Доступ к базе данных")
+}
+
+Rel(authController, appServiceLayer, "Обращается к бизнес-логике")
+Rel(deviceManagementController, appServiceLayer, "Обращается к бизнес-логике")
+Rel(deviceCommandController, appServiceLayer, "Обращается к бизнес-логике")
+Rel(dashboardController, appServiceLayer, "Обращается к бизнес-логике")
+Rel(appVideoStreamController, appServiceLayer, "Обращается к бизнес-логике")
+Rel(deviceCommandClientRegistry, heatingSystemService, "Отправляет команды в систему отопления")
+Rel(deviceCommandClientRegistry, lightSystemService, "Отправляет команды в систему освещения")
+Rel(deviceCommandClientRegistry, gateSystemService, "Отправляет команды в систему автоматических ворот")
+Rel(deviceCommandClientRegistry, videoSystemService, "Отправляет команды в систему видеонаблюдения")
+Rel(appServiceLayer, appVideoStreamClient, "Запрашивает видеопоток")
+Rel(appServiceLayer, deviceCommandClientRegistry, "Передаёт команды для отправки")
+Rel(appServiceLayer, appRepositoryLayer, "Сохраняет и читает данные")
+Rel(appRepositoryLayer, db, "Сохраняет и читает данные")
+
+' Сервис телеметрии
+Container(telemetryService, "Сервис телеметрии", "Go", "Собирает телеметрию с устройств") {
+    Component(telemetryConsumer, "TelemetryConsumer", "Получает телеметрию от брокера сообщений")
+    Component(telemetryServiceLayer, "Сервисный слой", "Бизнес-логика")
+    Component(telemetryRepositoryLayer, "Слой репозиториев", "Доступ к базе данных")
+}
+
+Rel(messageBroker, telemetryConsumer, "Отправляет телеметрию с устройств")
+Rel(telemetryConsumer, telemetryServiceLayer, "Обращается к бизнес-логике")
+Rel(telemetryServiceLayer, telemetryRepositoryLayer, "Сохраняет и читает данные")
+Rel(telemetryRepositoryLayer, db, "Сохраняет и читает данные")
+
+' Сервис взаимодействия с системой отопления
+Container(heatingSystemService, "Сервис взаимодействия с системой отопления", "Go", "Отправляет команды пользователя системе отопления") {
+    Component(heatingCommandController, "CommandController", "Принимает команды пользователя")
+    Component(heatingServiceLayer, "Сервисный слой", "Бизнес-логика")
+    Component(heatingCommandProducer, "CommandProducer", "Отправляет команды в систему отопления")
+}
+
+Rel(heatingCommandController, heatingServiceLayer, "Обращается к бизнес-логике")
+Rel(heatingServiceLayer, heatingCommandProducer, "Передаёт команды для отправки")
+Rel(heatingCommandProducer, messageBroker, "Отправляет команды в систему отопления")
+
+
+' Сервис взаимодействия с системой освещения
+Container(lightSystemService, "Сервис взаимодействия с системой освещения", "Go", "Отправляет команды пользователя системе освещения") {
+    Component(lightCommandController, "CommandController", "Принимает команды пользователя")
+    Component(lightServiceLayer, "Сервисный слой", "Бизнес-логика")
+    Component(lightCommandProducer, "CommandProducer", "Отправляет команды в систему освещения")
+}
+
+Rel(lightCommandController, lightServiceLayer, "Обращается к бизнес-логике")
+Rel(lightServiceLayer, lightCommandProducer, "Передаёт команды для отправки")
+Rel(lightCommandProducer, messageBroker, "Отправляет команды в систему освещения")
+
+' Сервис взаимодействия с системой автоматических ворот
+Container(gateSystemService, "Сервис взаимодействия с системой автоматических ворот", "Go", "Отправляет команды пользователя системе автоматических ворот") {
+    Component(gateCommandController, "CommandController", "Принимает команды пользователя")
+    Component(gateServiceLayer, "Сервисный слой", "Бизнес-логика")
+    Component(gateCommandProducer, "CommandProducer", "Отправляет команды в систему автоматических ворот")
+}
+
+Rel(gateCommandController, gateServiceLayer, "Обращается к бизнес-логике")
+Rel(gateServiceLayer, gateCommandProducer, "Передаёт команды для отправки")
+Rel(gateCommandProducer, messageBroker, "Отправляет команды в систему автоматических ворот")
+
+' Сервис взаимодействия с системой видеонаблюдения
+Container(videoSystemService, "Сервис взаимодействия с системой видеонаблюдения", "Go", "Отправляет команды пользователя системе видеонаблюдения") {
+    Component(videoCommandController, "CommandController", "Принимает команды пользователя")
+    Component(videoServiceLayer, "Сервисный слой", "Бизнес-логика")
+    Component(videoCommandProducer, "CommandProducer", "Отправляет команды в систему видеонаблюдения")
+    Component(videoStreamClient, "VideoStreamClient", "Запрашивает видеопоток из системы видеонаблюдения")
+    Component(videoStreamController, "VideoStreamController", "Отдаёт видеопоток из системы видеонаблюдения")
+}
+
+Rel(videoCommandController, videoServiceLayer, "Обращается к бизнес-логике")
+Rel(videoServiceLayer, videoCommandProducer, "Передаёт команды для отправки")
+Rel(videoCommandProducer, messageBroker, "Отправляет команды в систему видеонаблюдения")
+Rel(videoStreamClient, videoServiceLayer, "Обращается к бизнес-логике")
+Rel(videoServiceLayer, videoStreamController, "Отдаёт видеопоток")
+Rel(appVideoStreamClient, videoStreamController, "Запрашивает видеопоток")
+
+@enduml

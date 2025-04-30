@@ -1,0 +1,68 @@
+@startuml
+
+skinparam linetype ortho
+
+entity User {
+    * id: string <<generated>>
+    * name: string
+    * email: string
+}
+
+entity House {
+    * id: string <<generated>>
+    * user_id: string
+    name: string
+    address: string
+}
+
+entity Device {
+    * id: string <<generated>>
+    * house_id: string
+    * type_id: string
+    name: string
+    *serial_number: string
+    location: string
+    * status_id
+}
+
+entity DeviceType {
+    * id: string <<generated>>
+    * name
+}
+
+entity DeviceStatus {
+    * id: string <<generated>>
+    * name: string
+}
+
+entity DeviceConfiguration {
+    * id: string <<generated>>
+    * device_id: string
+    * url: string
+    * port: integer
+}
+
+entity Sensor {
+    * id: string <<generated>>
+    * device_id: string
+    name: string
+    * serial_number: string
+    location: string
+}
+
+entity TelemetryData {
+    * id: string <<generated>>
+    * sensor_id string
+    value: double
+    unit: string
+}
+
+User ||--|{ House
+House ||--|{ Device
+Device ||--|| DeviceType
+Device ||--|| DeviceStatus
+Device ||--|| DeviceConfiguration
+Device ||--|{ Sensor
+Sensor ||--o{ TelemetryData
+
+@enduml
